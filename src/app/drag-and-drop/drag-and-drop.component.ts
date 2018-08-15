@@ -23,7 +23,6 @@ export class DragAndDropComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log(this.sampleData);
   }
 
   allowDrop(ev) {
@@ -38,8 +37,8 @@ export class DragAndDropComponent implements OnInit {
   drop(ev) {
     ev.preventDefault();
     let draggableId = ev.dataTransfer.getData("draggableId");
-    let oldRank: number = +ev.dataTransfer.getData("draggableRank") as number;
-    let newRank: number = +ev.currentTarget.dataset.rank as number;
+    let oldRank: number = +ev.dataTransfer.getData("draggableRank");
+    let newRank: number = +ev.currentTarget.dataset.rank;
     // this.swap(oldRank, newRank)
     this.move(oldRank, newRank)
   }
