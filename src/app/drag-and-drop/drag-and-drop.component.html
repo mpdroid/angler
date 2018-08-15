@@ -1,0 +1,14 @@
+<div id="droppable_{{i}}" 
+     class="droppable" 
+     (drop)="drop($event)" (dragover)="allowDrop($event)"
+     [attr.data-rank]="i"
+     *ngFor="let i of ranks">
+<div id="draggable_{{i}}" 
+     class="draggable"
+     draggable="true"
+     [attr.data-rank]="i"
+     (dragstart)="drag($event)"
+ >
+{{sampleData[i].name}} - {{sampleData[i].rank}} 
+</div>
+</div>
