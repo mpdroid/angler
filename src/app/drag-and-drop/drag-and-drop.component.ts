@@ -30,6 +30,7 @@ export class DragAndDropComponent implements OnInit {
   }
 
   drag(ev) {
+    ev.dataTransfer.effectAllowed = "move";
     ev.dataTransfer.setData("draggableId", ev.currentTarget.id);
     ev.dataTransfer.setData("draggableRank", ev.currentTarget.dataset.rank);
   }
