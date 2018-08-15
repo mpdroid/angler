@@ -9,19 +9,17 @@ import { shallowEqualArrays } from '../../../node_modules/@angular/router/src/ut
 export class DragAndDropComponent implements OnInit {
 
   sampleData = [
-    {name: 'alpha', rank: 1},
-    {name: 'beta', rank: 2},
-    {name: 'gamma', rank: 3},
-    {name: 'delta', rank: 4},
-    {name: 'epsilon', rank: 5},
+    {name: 'alpha', rank: 0},
+    {name: 'beta', rank: 1},
+    {name: 'gamma', rank: 2},
+    {name: 'delta', rank: 3},
+    {name: 'epsilon', rank: 4},
   ]
 
   ranks: number[];
 
   constructor() { 
-
     this.ranks = Array(this.sampleData.length).fill(0).map((x,i) => i);
-    console.log(this.ranks);
   }
 
   ngOnInit() {
@@ -33,20 +31,24 @@ export class DragAndDropComponent implements OnInit {
   }
 
   drag(ev) {
-    console.log("dragging ",ev.target.id)
     ev.dataTransfer.setData("draggableId", ev.currentTarget.id);
     ev.dataTransfer.setData("draggableRank", ev.currentTarget.dataset.rank);
   }
 
   drop(ev) {
     ev.preventDefault();
-    var draggableId = ev.dataTransfer.getData("draggableId");
-    var oldRank = ev.dataTransfer.getData("draggableRank");
-    var newRank = ev.currentTarget.dataset.rank;
-    this.swap(oldRank, newRank)
+    let draggableId = ev.dataTransfer.getData("draggableId");
+    let oldRank: number = +ev.dataTransfer.getData("draggableRank") as number;
+    let newRank: number = +ev.currentTarget.dataset.rank as number;
+    // this.swap(oldRank, newRank)
+    this.move(oldRank, newRank)
   }
 
   swap(first: number, second: number): void {
+    if (first === second) {
+      return;
+    }
+
     let tempRank = this.sampleData[second].rank;
     this.sampleData[second].rank = this.sampleData[first].rank;
     this.sampleData[first].rank = tempRank;
@@ -56,5 +58,32 @@ export class DragAndDropComponent implements OnInit {
     this.sampleData[first] = temp;
   }
 
+  move(from: number, to: number) {
+    if (from === to) {
+      return;
+    }
+    let cloned = this.sampleData.slice(0);
+    let toRank = cloned[to].rank;
+    let fromTemp = cloned[from];
+    if (from > to) {
+      for (let k = from; k > to; k--) {
+        cloned[k] = cloned[k-1];
+        cloned[k].rank = k;
+      }
+    }
+    else {
+      let fromRank = cloned[from].rank;
+      let fromTemp = cloned[from];
+      for (let k = from; k < to; k++) {
+        cloned[k] = cloned[k+1];
+        cloned[k].rank = k;
+      }
+      
+    }
+    cloned[to] = fromTemp;
+    cloned[to].rank = toRank;
+    this.sampleData = cloned.slice(0);
+
+  }
 
 }
